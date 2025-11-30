@@ -170,8 +170,8 @@ python generate_samples.py --data_root /path/to/your/data
 ## 🆘 Need Help?
 
 - 📧 **Email:** your.email@example.com
-- 🐛 **Issues:** [GitHub Issues](https://github.com/YOUR_USERNAME/TimesNet-Gen/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/YOUR_USERNAME/TimesNet-Gen/discussions)
+- 🐛 **Issues:** [GitHub Issues](https://github.com/brsylmz23/TimesNet-Gen/issues)
+- 💬 **Discussions:** [GitHub Discussions](https://github.com/brsylmz23/TimesNet-Gen/discussions)
 
 ---
 

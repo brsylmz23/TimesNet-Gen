@@ -44,9 +44,9 @@ https://github.com/KULLANICI_ADIN/TimesNet-Gen
 
 ### Placeholder'ları Değiştir
 ```bash
-# YOUR_USERNAME'i değiştir
+# brsylmz23'i değiştir
 cd TimesNet-Gen
-find . -name "*.md" -type f -exec sed -i '' 's/YOUR_USERNAME/GERÇEK_KULLANICI_ADIN/g' {} +
+find . -name "*.md" -type f -exec sed -i '' 's/brsylmz23/GERÇEK_KULLANICI_ADIN/g' {} +
 
 # Commit ve push
 git add .

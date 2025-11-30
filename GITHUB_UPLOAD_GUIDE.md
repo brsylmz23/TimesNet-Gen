@@ -37,7 +37,7 @@ Eğer kurulu değilse:
    - **Create repository** butonuna tıkla
 
 4. **Repo URL'ini kopyala:**
-   - Sayfada göreceksin: `https://github.com/YOUR_USERNAME/TimesNet-Gen.git`
+   - Sayfada göreceksin: `https://github.com/brsylmz23/TimesNet-Gen.git`
    - Bu URL'i not al!
 
 ---
@@ -67,7 +67,7 @@ git commit -m "Initial commit: TimesNet-Gen generative seismic model"
 git branch -M main
 
 # 7. GitHub repo'nu remote olarak ekle (URL'i kendi URL'inle değiştir!)
-git remote add origin https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git remote add origin https://github.com/brsylmz23/TimesNet-Gen.git
 
 # 8. GitHub'a yükle!
 git push -u origin main
@@ -100,7 +100,7 @@ cat ~/.ssh/id_ed25519.pub
 # Kopyaladığın key'i yapıştır
 
 # Remote URL'i SSH'a çevir
-git remote set-url origin git@github.com:YOUR_USERNAME/TimesNet-Gen.git
+git remote set-url origin git@github.com:brsylmz23/TimesNet-Gen.git
 git push -u origin main
 ```
 
@@ -108,7 +108,7 @@ git push -u origin main
 
 ### ADIM 4: Yüklemeyi Doğrula
 
-1. **GitHub repo sayfana git:** `https://github.com/YOUR_USERNAME/TimesNet-Gen`
+1. **GitHub repo sayfana git:** `https://github.com/brsylmz23/TimesNet-Gen`
 2. **Dosyaların yüklendiğini kontrol et:**
    - ✅ README.md görünüyor mu?
    - ✅ Klasörler (models/, docs/, examples/) var mı?
@@ -163,7 +163,7 @@ Generative seismic waveform synthesis using TimesNet architecture with point-clo
 3. Model dosyasını yükle
 4. Link'i README'ye ekle:
    ```markdown
-   📥 **Download Link:** [Hugging Face](https://huggingface.co/YOUR_USERNAME/timesnet-gen)
+   📥 **Download Link:** [Hugging Face](https://huggingface.co/brsylmz23/timesnet-gen)
    ```
 
 **Seçenek 3: Zenodo**
@@ -173,7 +173,7 @@ Generative seismic waveform synthesis using TimesNet architecture with point-clo
 
 ### Placeholder'ları Güncelle
 
-Şu dosyalarda `YOUR_USERNAME` ve link placeholder'larını değiştir:
+Şu dosyalarda `brsylmz23` ve link placeholder'larını değiştir:
 - `README.md`
 - `GETTING_STARTED.md`
 - `checkpoints/README.md`
@@ -183,8 +183,8 @@ Generative seismic waveform synthesis using TimesNet architecture with point-clo
 # Otomatik değiştirmek için (macOS/Linux):
 cd "/Applications/Projects/DeepEQ/Detection of P and S Waves in Strong Motion Earthquake Data/TimesNet-Gen"
 
-# YOUR_USERNAME'i değiştir
-find . -name "*.md" -type f -exec sed -i '' 's/YOUR_USERNAME/GERÇEK_KULLANICI_ADIN/g' {} +
+# brsylmz23'i değiştir
+find . -name "*.md" -type f -exec sed -i '' 's/brsylmz23/GERÇEK_KULLANICI_ADIN/g' {} +
 
 # Değişiklikleri commit et ve push et
 git add .
@@ -227,7 +227,7 @@ git commit -m "Refactor: Code cleanup"
 ### "fatal: remote origin already exists"
 ```bash
 git remote remove origin
-git remote add origin https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git remote add origin https://github.com/brsylmz23/TimesNet-Gen.git
 ```
 
 ### "Updates were rejected"
@@ -262,7 +262,7 @@ Yüklemeden önce kontrol et:
 - [ ] `.gitignore` dosyası var ve doğru yapılandırılmış
 - [ ] Büyük dosyalar (*.pth, *.mat) .gitignore'da
 - [ ] README.md düzgün görünüyor
-- [ ] Tüm placeholder'lar (YOUR_USERNAME) değiştirilmiş
+- [ ] Tüm placeholder'lar (brsylmz23) değiştirilmiş
 - [ ] Model download linki eklendi
 - [ ] Email adresi güncellendi
 - [ ] LICENSE dosyası var
@@ -274,7 +274,7 @@ Yüklemeden önce kontrol et:
 
 Repo'n artık yayında! 🚀
 
-**Repo URL'in:** `https://github.com/YOUR_USERNAME/TimesNet-Gen`
+**Repo URL'in:** `https://github.com/brsylmz23/TimesNet-Gen`
 
 ### Sonraki Adımlar:
 1. ⭐ Kendi repo'na star ver (istatistikler için)

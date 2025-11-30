@@ -74,7 +74,7 @@ TimesNet-Gen/
 
 ### 1. First-time User (5 minutes)
 ```bash
-git clone https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git clone https://github.com/brsylmz23/TimesNet-Gen.git
 cd TimesNet-Gen
 pip install -r requirements.txt
 # Download model from link in checkpoints/README.md
@@ -136,7 +136,7 @@ python plot_combined_hvsr_all_sources.py
 Update these placeholders in the files:
 
 1. **README.md:**
-   - `YOUR_USERNAME` → Your GitHub username
+   - `brsylmz23` → Your GitHub username
    - `[Add your link here]` → Model download link
    - `your.email@example.com` → Your email
 
@@ -175,7 +175,7 @@ Your README will show:
 
 ## ✅ Pre-publish Checklist
 
-- [ ] Update all `YOUR_USERNAME` placeholders
+- [ ] Update all `brsylmz23` placeholders
 - [ ] Add model download link
 - [ ] Add dataset link (if public)
 - [ ] Add your email/contact info
@@ -205,7 +205,7 @@ cd TimesNet-Gen
 git init
 git add .
 git commit -m "Initial commit: TimesNet-Gen generative seismic model"
-git remote add origin https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git remote add origin https://github.com/brsylmz23/TimesNet-Gen.git
 git push -u origin main
 ```
 

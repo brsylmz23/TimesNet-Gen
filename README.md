@@ -26,7 +26,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git clone https://github.com/brsylmz23/TimesNet-Gen.git
 cd TimesNet-Gen
 
 # Install dependencies
@@ -219,7 +219,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 For questions or collaborations:
 - **Email**: your.email@example.com
-- **GitHub Issues**: [Create an issue](https://github.com/YOUR_USERNAME/TimesNet-Gen/issues)
+- **GitHub Issues**: [Create an issue](https://github.com/brsylmz23/TimesNet-Gen/issues)
 
 ---
 
@@ -235,7 +235,7 @@ For questions or collaborations:
 
 If you find this project useful, please consider giving it a star! ⭐
 
-[![Star History Chart](https://api.star-history.com/svg?repos=YOUR_USERNAME/TimesNet-Gen&type=Date)](https://star-history.com/#YOUR_USERNAME/TimesNet-Gen&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=brsylmz23/TimesNet-Gen&type=Date)](https://star-history.com/#brsylmz23/TimesNet-Gen&Date)
 
 ---
 

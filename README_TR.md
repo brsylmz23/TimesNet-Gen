@@ -12,7 +12,7 @@
 
 ### Kurulum
 ```bash
-git clone https://github.com/YOUR_USERNAME/TimesNet-Gen.git
+git clone https://github.com/brsylmz23/TimesNet-Gen.git
 cd TimesNet-Gen
 pip install -r requirements.txt
 ```
@@ -108,7 +108,7 @@ TimesNet-Gen/
 
 ## 📧 İletişim
 
-- **GitHub Issues**: [Issue aç](https://github.com/YOUR_USERNAME/TimesNet-Gen/issues)
+- **GitHub Issues**: [Issue aç](https://github.com/brsylmz23/TimesNet-Gen/issues)
 - **Email**: your.email@example.com
 
 ---
