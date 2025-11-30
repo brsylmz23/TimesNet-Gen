@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Model checkpoints (too large for GitHub)
+checkpoints/*.pth
+checkpoints/*.pt
+benchmarks/*.pth
+benchmarks/*.torchscript
+*.pth
+*.pt
+!checkpoints/.gitkeep
+
+# Data files (too large for GitHub)
+data/*.mat
+data/*.asc
+data/*.hdf5
+data/*.h5
+!data/.gitkeep
+!data/README.md
+
+# Generated outputs
+generated_samples/
+inference_results_*/
+Results_PSdetect/
+station_splits_*/
+*_generated/
+eval_results/
+
+# Logs
+*.log
+logs/
+wandb/
+runs/
+
+# LaTeX
+*.aux
+*.out
+*.synctex
+*.synctex(busy)
+*.fdb_latexmk
+*.fls
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+

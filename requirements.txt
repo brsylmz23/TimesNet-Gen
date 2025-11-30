@@ -1,0 +1,33 @@
+# Deep Learning Framework
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Data Processing
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+h5py>=3.8.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Scientific Computing
+scikit-learn>=1.3.0
+
+# File I/O
+tqdm>=4.65.0
+
+# Optional: For MATLAB file support
+# If you need to read .mat files directly in Python
+# Uncomment the line below:
+# mat73>=0.59
+
+# Optional: For experiment tracking
+# wandb>=0.15.0
+# tensorboard>=2.13.0
+
+# Optional: For Jupyter notebooks
+# jupyter>=1.0.0
+# ipykernel>=6.23.0
+
