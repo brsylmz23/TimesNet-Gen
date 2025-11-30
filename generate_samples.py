@@ -1,20 +1,10 @@
 #!/usr/bin/env python3
 """
-Quick inference script for TimesNet-PointCloud generative model.
-Loads a pre-trained checkpoint and generates seismic time series samples.
+Simplified inference script for TimesNet-PointCloud generative model.
+Only loads data for the 5 fine-tuned stations.
 
 Usage:
-    # Generate 50 samples per station (default)
-    python generate_samples.py
-    
-    # Generate 100 samples per station
-    python generate_samples.py --num_samples 100
-    
-    # Generate 200 samples per station
-    python generate_samples.py --num_samples 200
-    
-    # Use custom checkpoint
-    python generate_samples.py --checkpoint ./my_model.pth --num_samples 50
+    python generate_samples_simple.py --num_samples 50
 """
 import os
 import argparse
@@ -22,24 +12,15 @@ import torch
 import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
-
-try:
-    from data_provider.data_loader import generate_and_save_station_splits_mat
-except Exception:
-    from data_loader import generate_and_save_station_splits_mat
-try:
-    from data_provider.data_loader_gen import GenMatDataset
-except Exception:
-    from data_loader_gen import GenMatDataset
+import glob
+import scipy.io as sio
 
 
-class GenArgs:
+class SimpleArgs:
     """Configuration for generation."""
     def __init__(self):
-        # Data and model architecture
-        self.root_path = r"D:\Baris\new_Ps_Vs30/"
+        # Model architecture
         self.seq_len = 6000
-        self.batch_size = 32
         self.d_model = 128
         self.d_ff = 256
         self.e_layers = 2
@@ -52,94 +33,117 @@ class GenArgs:
         # System
         self.use_gpu = torch.cuda.is_available()
         self.seed = 0
+        
+        # Point-cloud generation
+        self.pcgen_k = 5
+        self.pcgen_jitter_std = 0.0
 
-        # Point-cloud generation options
-        self.pcgen_k = 5  # number of latent points to mix
-        self.pcgen_per_station = True  # restrict mixes within same station pool
-        self.pcgen_jitter_std = 0.0  # optional Gaussian jitter on mixed z
+
+def load_mat_file(filepath, seq_len=6000):
+    """Load and preprocess a .mat file."""
+    try:
+        mat_data = sio.loadmat(filepath)
+        
+        # Try different possible field names
+        for key in ['data', 'signal', 'waveform', 'acc']:
+            if key in mat_data:
+                data = mat_data[key]
+                break
+        else:
+            # Use first non-metadata key
+            data = [v for k, v in mat_data.items() if not k.startswith('__')][0]
+        
+        # Ensure shape is (3, N)
+        if data.shape[0] != 3:
+            data = data.T
+        
+        # Resample to seq_len
+        if data.shape[1] != seq_len:
+            from scipy import signal as sp_signal
+            data_resampled = np.zeros((3, seq_len))
+            for i in range(3):
+                data_resampled[i] = sp_signal.resample(data[i], seq_len)
+            data = data_resampled
+        
+        return torch.FloatTensor(data)
+    
+    except Exception as e:
+        print(f"[ERROR] Failed to load {filepath}: {e}")
+        return None
 
 
 def load_model(checkpoint_path, args):
-    """Load pre-trained TimesNet-PointCloud model from checkpoint."""
-    from TimesNet_PointCloud import TimesNetPointCloud
+    """Load pre-trained TimesNet-PointCloud model."""
+    from models.TimesNet_PointCloud import TimesNetPointCloud
     
     # Create model config
     class ModelConfig:
         def __init__(self, args):
             self.seq_len = args.seq_len
             self.pred_len = 0
-            self.enc_in = 3  # E, N, U channels
+            self.enc_in = 3
             self.c_out = 3
             self.d_model = args.d_model
             self.d_ff = args.d_ff
             self.num_kernels = args.num_kernels
             self.top_k = args.top_k
             self.e_layers = args.e_layers
+            self.d_layers = args.d_layers
             self.dropout = args.dropout
             self.embed = 'timeF'
             self.freq = 'h'
+            self.latent_dim = args.latent_dim
     
     config = ModelConfig(args)
     model = TimesNetPointCloud(config)
     
     # Load checkpoint
-    if not os.path.exists(checkpoint_path):
-        raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
-    
     checkpoint = torch.load(checkpoint_path, map_location='cpu')
     if 'model_state_dict' in checkpoint:
         model.load_state_dict(checkpoint['model_state_dict'])
-        print(f"[INFO] Loaded model from epoch {checkpoint.get('epoch', 'unknown')}")
     else:
         model.load_state_dict(checkpoint)
-        print(f"[INFO] Loaded model state dict")
     
+    model.eval()
     if args.use_gpu:
         model = model.cuda()
     
-    model.eval()
     print(f"[INFO] Model loaded successfully from {checkpoint_path}")
     return model
 
 
-def generate_samples_for_station(model, dataset, station_id, num_samples, args):
-    """
-    Generate samples for a specific station using k-sample encoder feature mixing.
-    
-    Args:
-        model: TimesNetPointCloud model
-        dataset: GenMatDataset
-        station_id: Target station ID (e.g., '0205')
-        num_samples: Number of samples to generate
-        args: Generation arguments
-    
-    Returns:
-        generated_signals: numpy array of shape (num_samples, seq_len, 3)
-        real_names: list of real signal filenames used for mixing
-    """
-    # Get all samples for this station
-    station_indices = [i for i, (_, sid, _) in enumerate(dataset) if dataset.station_id_map[int(sid)] == station_id]
-    
-    if len(station_indices) == 0:
-        print(f"[WARN] No samples found for station {station_id}")
+def generate_samples_for_station(model, station_files, num_samples, args):
+    """Generate samples using point-cloud mixing."""
+    if len(station_files) == 0:
         return None, None
-    
-    print(f"[INFO] Station {station_id}: Found {len(station_indices)} real samples, generating {num_samples} new samples")
     
     generated_signals = []
     real_names_used = []
     
+    # Load all station files
+    station_data = []
+    for fpath in station_files:
+        data = load_mat_file(fpath, args.seq_len)
+        if data is not None:
+            station_data.append((data, os.path.basename(fpath)))
+    
+    if len(station_data) == 0:
+        print(f"[WARN] Could not load any files")
+        return None, None
+    
+    print(f"[INFO] Loaded {len(station_data)} real samples")
+    
     with torch.no_grad():
         for _ in range(num_samples):
-            # Randomly select k samples from this station
-            k = min(args.pcgen_k, len(station_indices))
-            selected_indices = np.random.choice(station_indices, size=k, replace=False)
+            # Randomly select k samples
+            k = min(args.pcgen_k, len(station_data))
+            selected_indices = np.random.choice(len(station_data), size=k, replace=False)
             
             # Encode all k samples
             encoder_features = []
             names = []
             for idx in selected_indices:
-                x, sid, fname = dataset[idx]
+                x, fname = station_data[idx]
                 x = x.unsqueeze(0)  # Add batch dimension
                 if args.use_gpu:
                     x = x.cuda()
@@ -158,8 +162,7 @@ def generate_samples_for_station(model, dataset, station_id, num_samples, args):
                 mixed_features = mixed_features + noise
             
             # Decode to generate signal
-            # Use means and stdev from the first sample
-            x_first, _, _ = dataset[selected_indices[0]]
+            x_first, _ = station_data[selected_indices[0]]
             x_first = x_first.unsqueeze(0)
             if args.use_gpu:
                 x_first = x_first.cuda()
@@ -167,13 +170,11 @@ def generate_samples_for_station(model, dataset, station_id, num_samples, args):
             
             generated = model.project_features_for_reconstruction(mixed_features, means_b, stdev_b)
             
-            # Convert to numpy
-            generated_np = generated.squeeze(0).cpu().numpy()  # (seq_len, 3)
-            generated_signals.append(generated_np)
+            # Store
+            generated_signals.append(generated.squeeze(0).cpu().numpy())
             real_names_used.append(names)
     
-    generated_signals = np.stack(generated_signals, axis=0)  # (num_samples, seq_len, 3)
-    return generated_signals, real_names_used
+    return np.array(generated_signals), real_names_used
 
 
 def save_generated_samples(generated_signals, real_names, station_id, output_dir):
@@ -191,126 +192,66 @@ def save_generated_samples(generated_signals, real_names, station_id, output_dir
 
 
 def plot_sample_preview(generated_signals, station_id, output_dir, num_preview=2):
-    """Create preview plots of generated samples."""
+    """Create preview plots."""
     os.makedirs(output_dir, exist_ok=True)
     
-    num_preview = min(num_preview, len(generated_signals))
-    fs = 100.0  # Sampling frequency in Hz
-    
-    for i in range(num_preview):
-        sig = generated_signals[i]  # (seq_len, 3)
-        T = sig.shape[0]
-        t = np.arange(T) / fs
+    for i in range(min(num_preview, len(generated_signals))):
+        fig, axes = plt.subplots(3, 1, figsize=(12, 8))
+        signal = generated_signals[i]
         
-        fig, axes = plt.subplots(3, 1, figsize=(12, 8), sharex=True)
-        labels = ['E-W', 'N-S', 'U-D']
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+        channel_names = ['E-W', 'N-S', 'U-D']
+        for ch, (ax, name) in enumerate(zip(axes, channel_names)):
+            ax.plot(signal[ch], linewidth=0.8)
+            ax.set_ylabel(f'{name}\nAmplitude', fontsize=10, fontweight='bold')
+            ax.grid(True, alpha=0.3)
         
-        for ch in range(3):
-            axes[ch].plot(t, sig[:, ch], color=colors[ch], linewidth=1.0, alpha=0.9)
-            axes[ch].set_ylabel(labels[ch], fontsize=12, fontweight='bold')
-            axes[ch].grid(True, alpha=0.3)
-        
-        axes[-1].set_xlabel('Time (s)', fontsize=12, fontweight='bold')
-        fig.suptitle(f'Generated Sample - Station {station_id} (#{i+1})', fontsize=14, fontweight='bold')
+        axes[-1].set_xlabel('Time Steps', fontsize=10, fontweight='bold')
+        fig.suptitle(f'Generated Sample - Station {station_id}', fontsize=12, fontweight='bold')
         plt.tight_layout()
         
-        output_path = os.path.join(output_dir, f'station_{station_id}_generated_sample_{i+1}.png')
+        output_path = os.path.join(output_dir, f'station_{station_id}_preview_{i}.png')
         plt.savefig(output_path, dpi=150, bbox_inches='tight')
-        plt.close(fig)
+        plt.close()
     
-    print(f"[INFO] Saved {num_preview} preview plots to {output_dir}")
+    print(f"[INFO] Saved {min(num_preview, len(generated_signals))} preview plots to {output_dir}")
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Generate seismic time series samples from pre-trained TimesNet-PointCloud model',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  # Generate 50 samples (default)
-  python generate_samples.py
-  
-  # Generate 100 samples
-  python generate_samples.py --num_samples 100
-  
-  # Generate with custom checkpoint and output
-  python generate_samples.py --checkpoint ./my_model.pth --num_samples 200 --output_dir ./results
-  
-  # Generate for specific stations only
-  python generate_samples.py --stations 0205 1716 --num_samples 50
-        """
-    )
+    parser = argparse.ArgumentParser(description='Generate seismic samples (simplified version)')
     parser.add_argument('--checkpoint', type=str, 
                         default=r'D:\Baris\codes\Time-Series-Library-main\checkpoints\timesnet_pointcloud_phase1_final.pth',
                         help='Path to pre-trained model checkpoint')
     parser.add_argument('--num_samples', type=int, default=50, 
-                        help='Number of samples to generate per station (default: 50)')
+                        help='Number of samples to generate per station')
     parser.add_argument('--output_dir', type=str, default='./generated_samples', 
-                        help='Output directory for generated samples')
+                        help='Output directory')
     parser.add_argument('--num_preview', type=int, default=2, 
-                        help='Number of preview plots per station (default: 2)')
+                        help='Number of preview plots per station')
     parser.add_argument('--stations', type=str, nargs='+', default=['0205', '1716', '2020', '3130', '4628'],
-                        help='Target station IDs (default: all 5 stations)')
-    parser.add_argument('--data_root', type=str, default=r"./data/", 
-                        help='Root path to seismic data (see data/DEMO_DATA_INFO.md for format)')
-    parser.add_argument('--seq_len', type=int, default=6000, 
-                        help='Sequence length in time steps (default: 6000)')
-    parser.add_argument('--pcgen_k', type=int, default=5, 
-                        help='Number of real samples to mix for each generated sample (default: 5)')
+                        help='Target station IDs')
+    parser.add_argument('--data_root', type=str, default=r"D:\Baris\new_Ps_Vs30/", 
+                        help='Root path to seismic data')
     
     args_cli = parser.parse_args()
     
-    # Check if checkpoint exists
+    # Check checkpoint
     if not os.path.exists(args_cli.checkpoint):
         print(f"\n{'='*80}")
         print(f"❌ ERROR: Checkpoint not found!")
         print(f"{'='*80}")
         print(f"\nLooking for: {args_cli.checkpoint}")
-        print("\n📁 Available checkpoints:")
-        checkpoint_dir = './checkpoints'
-        if os.path.exists(checkpoint_dir):
-            checkpoints = [f for f in os.listdir(checkpoint_dir) if f.endswith('.pth')]
-            if checkpoints:
-                for ckpt in sorted(checkpoints):
-                    ckpt_path = os.path.join(checkpoint_dir, ckpt)
-                    size_mb = os.path.getsize(ckpt_path) / (1024 * 1024)
-                    print(f"  ✓ {ckpt_path} ({size_mb:.1f} MB)")
-            else:
-                print("  ⚠ No checkpoints found in ./checkpoints/")
-        else:
-            print("  ⚠ ./checkpoints/ directory does not exist")
-        
-        # Check benchmarks folder too
-        benchmark_dir = './benchmarks'
-        if os.path.exists(benchmark_dir):
-            benchmarks = [f for f in os.listdir(benchmark_dir) if f.endswith('.pth')]
-            if benchmarks:
-                print("\n📁 Checkpoints in ./benchmarks/:")
-                for ckpt in sorted(benchmarks):
-                    ckpt_path = os.path.join(benchmark_dir, ckpt)
-                    size_mb = os.path.getsize(ckpt_path) / (1024 * 1024)
-                    print(f"  ✓ {ckpt_path} ({size_mb:.1f} MB)")
-        
-        print("\n💡 To train a model first, run:")
-        print("   python untitled1_gen.py")
-        print(f"\n{'='*80}\n")
         return
     
     # Create configuration
-    args = GenArgs()
-    args.root_path = args_cli.data_root
-    args.seq_len = args_cli.seq_len
-    args.pcgen_k = args_cli.pcgen_k
+    args = SimpleArgs()
     
     print("="*80)
-    print("TimesNet-PointCloud Sample Generation")
+    print("TimesNet-Gen Sample Generation (Simplified)")
     print("="*80)
     print(f"Checkpoint: {args_cli.checkpoint}")
     print(f"Target stations: {args_cli.stations}")
     print(f"Samples per station: {args_cli.num_samples}")
     print(f"Output directory: {args_cli.output_dir}")
-    print(f"K-sample mixing: {args.pcgen_k}")
     print("="*80)
     
     # Set random seed
@@ -320,34 +261,24 @@ Examples:
     # Load model
     model = load_model(args_cli.checkpoint, args)
     
-    # Create dataset splits
-    print("\n[INFO] Preparing dataset...")
-    split_out_dir = f"./station_splits_gen_inference_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-    os.makedirs(split_out_dir, exist_ok=True)
+    # Load data files for selected stations only
+    print("\n[INFO] Loading data for selected stations...")
     
-    try:
-        generate_and_save_station_splits_mat(
-            root_dir=args.root_path,
-            selected_stations=args_cli.stations,
-            output_dir=split_out_dir,
-            seq_len=args.seq_len,
-            copy_files=False,
-        )
-    except Exception as e:
-        print(f"[WARN] Dataset split creation: {e}")
+    all_station_files = {}
+    for station_id in args_cli.stations:
+        # Find all .mat files for this station
+        pattern = os.path.join(args_cli.data_root, f"*{station_id}*.mat")
+        station_files = glob.glob(pattern)
+        
+        if len(station_files) == 0:
+            print(f"[WARN] No files found for station {station_id}")
+        else:
+            print(f"[INFO] Found {len(station_files)} files for station {station_id}")
+            all_station_files[station_id] = station_files
     
-    # Load test dataset
-    test_csv = os.path.join(split_out_dir, 'test_list.csv')
-    if not os.path.exists(test_csv):
-        raise FileNotFoundError(f"Test CSV not found: {test_csv}")
-    
-    test_ds = GenMatDataset(
-        csv_path=test_csv,
-        root_dir=args.root_path,
-        seq_len=args.seq_len,
-        return_filename=True
-    )
-    print(f"[INFO] Loaded test dataset: {len(test_ds)} samples")
+    if len(all_station_files) == 0:
+        print(f"\n❌ ERROR: No data files found in {args_cli.data_root}")
+        return
     
     # Create output directories
     npz_output_dir = os.path.join(args_cli.output_dir, 'generated_timeseries_npz')
@@ -356,12 +287,15 @@ Examples:
     # Generate samples for each station
     print("\n[INFO] Generating samples...")
     for station_id in args_cli.stations:
+        if station_id not in all_station_files:
+            continue
+        
         print(f"\n{'='*60}")
         print(f"Processing Station: {station_id}")
         print(f"{'='*60}")
         
         generated_signals, real_names = generate_samples_for_station(
-            model, test_ds, station_id, args_cli.num_samples, args
+            model, all_station_files[station_id], args_cli.num_samples, args
         )
         
         if generated_signals is not None:
@@ -379,6 +313,6 @@ Examples:
     print("="*80)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
