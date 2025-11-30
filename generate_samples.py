@@ -252,8 +252,8 @@ Examples:
                         help='Number of preview plots per station (default: 2)')
     parser.add_argument('--stations', type=str, nargs='+', default=['0205', '1716', '2020', '3130', '4628'],
                         help='Target station IDs (default: all 5 stations)')
-    parser.add_argument('--data_root', type=str, default=r"D:\Baris\new_Ps_Vs30/", 
-                        help='Root path to seismic data')
+    parser.add_argument('--data_root', type=str, default=r"./data/", 
+                        help='Root path to seismic data (see data/DEMO_DATA_INFO.md for format)')
     parser.add_argument('--seq_len', type=int, default=6000, 
                         help='Sequence length in time steps (default: 6000)')
     parser.add_argument('--pcgen_k', type=int, default=5, 

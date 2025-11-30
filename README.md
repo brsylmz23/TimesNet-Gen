@@ -6,7 +6,7 @@
 
 > **A deep learning framework for generating realistic seismic time series using point-cloud latent space mixing**
 
-![TimesNet Architecture](figures/timesnet_gen_diagram.png)
+![TimesNet-Gen Architecture](figures/TimesNetgenModelErdem.png)
 
 ---
 
@@ -83,22 +83,11 @@ python generate_samples.py --num_samples 200
 python generate_samples.py --stations 0205 1716 --num_samples 50
 ```
 
-### Train Your Own Model
+### Run Demo Script
 
 ```bash
-# Train from scratch (requires seismic dataset)
-python untitled1_gen.py
-
-# Training consists of two phases:
-# Phase 0: Unsupervised reconstruction (~20-30 min)
-# Phase 1: Fine-tuning with noise injection (~10-20 min)
-```
-
-### Visualize Results
-
-```bash
-# Generate HVSR and comparison plots
-python plot_combined_hvsr_all_sources.py
+cd examples
+python demo_quick_start.py
 ```
 
 ---
@@ -117,25 +106,23 @@ TimesNet-Gen uses a novel **point-cloud generation** approach:
 - **Phase 1**: Add Gaussian noise to latent features during training
 - **Result**: Smooth, continuous latent space → realistic interpolations
 
-![Architecture Comparison](architecture_compare_final.png)
-
 ---
 
 ## 📊 Results
 
 ### Generated vs Real Waveforms
 
-| Station | Dominant Frequency (f₀) | JS Similarity | Visual Quality |
-|---------|------------------------|---------------|----------------|
-| 0205    | 2.6 Hz                 | 0.95          | ⭐⭐⭐⭐⭐        |
-| 1716    | 6.4 Hz                 | 0.93          | ⭐⭐⭐⭐⭐        |
-| 2020    | 5.1 Hz                 | 0.94          | ⭐⭐⭐⭐⭐        |
-| 3130    | 12.8 Hz                | 0.92          | ⭐⭐⭐⭐         |
-| 4628    | 1.8 Hz                 | 0.96          | ⭐⭐⭐⭐⭐        |
+| Station | Dominant Frequency (f₀) | JS Similarity |
+|---------|------------------------|---------------|
+| 0205    | 2.6 Hz                 | 0.95          |
+| 1716    | 6.4 Hz                 | 0.93          |
+| 2020    | 5.1 Hz                 | 0.94          |
+| 3130    | 12.8 Hz                | 0.92          |
+| 4628    | 1.8 Hz                 | 0.96          |
 
 ### Example Output
 
-![Real vs Generated Comparison](examples/comparison_example.png)
+![Real vs Generated Comparison](examples/sample_outputs/comparison_example.png)
 
 *Left: Real seismic signal | Right: Generated signal | Bottom: Fourier Amplitude Spectra*
 
@@ -149,9 +136,7 @@ TimesNet-Gen/
 ├── requirements.txt                   # Python dependencies
 ├── .gitignore                         # Git ignore rules
 │
-├── generate_samples.py                # 🚀 Main inference script
-├── untitled1_gen.py                   # Training script
-├── plot_combined_hvsr_all_sources.py  # Visualization script
+├── generate_samples.py                # 🚀 Main inference script (demo)
 │
 ├── models/
 │   ├── TimesNet_PointCloud.py         # Main model architecture
@@ -170,29 +155,15 @@ TimesNet-Gen/
 │   └── [your seismic .mat files]
 │
 ├── figures/
-│   └── timesnet_gen_diagram.png       # Architecture diagrams
+│   └── TimesNetgenModelErdem.png      # Architecture diagram
 │
 ├── examples/
-│   └── demo_notebook.ipynb            # Interactive demo
+│   ├── demo_quick_start.py            # Interactive demo
+│   └── README.md                      # Examples guide
 │
 └── docs/
     ├── QUICKSTART.md                  # Quick start guide
     └── GENERATION_README.md           # Detailed documentation
-```
-
----
-
-## 🔬 Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@article{your_paper_2025,
-  title={TimesNet-Gen: Generative Seismic Waveform Synthesis via Latent Space Mixing},
-  author={Your Name},
-  journal={Your Journal},
-  year={2025}
-}
 ```
 
 ---
@@ -203,41 +174,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📧 Contact
-
-For questions or collaborations:
-- **Email**: your.email@example.com
-- **GitHub Issues**: [Create an issue](https://github.com/brsylmz23/TimesNet-Gen/issues)
-
----
-
 ## 🙏 Acknowledgments
 
 - Based on the TimesNet architecture for time series analysis
-- Seismic data provided by [Your Data Source]
 - Inspired by VAE and point-cloud generation techniques
 
 ---
 
-## ⭐ Star History
-
-If you find this project useful, please consider giving it a star! ⭐
-
-[![Star History Chart](https://api.star-history.com/svg?repos=brsylmz23/TimesNet-Gen&type=Date)](https://star-history.com/#brsylmz23/TimesNet-Gen&Date)
-
----
-
 **Made with ❤️ for the seismology community**
-
