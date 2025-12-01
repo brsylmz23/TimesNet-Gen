@@ -84,31 +84,18 @@ python generate_samples.py --stations 0205 1716 --num_samples 100
 
 ---
 
-## 🎓 Training (Optional)
-
-If you want to train from scratch:
-
-```bash
-# Phase 0: Unsupervised pre-training (~20-25 hours)
-# Phase 1: Fine-tuning + Latent bank generation (~5-10 hours)
-python untitled1_gen.py
-```
-
-**Note:** Pre-trained models are provided, so training is optional.
-
----
 
 ## 📈 Results
 
 ### Station-Specific f₀ Values
 
-| Station | Target f₀ (Hz) | Generated f₀ (Hz) |
-|---------|----------------|-------------------|
-| 2020    | 5.1            | 5.17 ± 0.3        |
-| 4628    | 1.8            | 2.52 ± 0.4        |
-| 0205    | 2.6            | 2.6 ± 0.2         |
-| 1716    | 6.4            | 6.40 ± 0.5        |
-| 3130    | 12.8           | 13.37 ± 0.8       |
+| Station | Target f₀ (Hz) |
+|---------|----------------|
+| 2020    | 5.1            |
+| 4628    | 1.8            |
+| 0205    | 2.6            |
+| 1716    | 6.4            |
+| 3130    | 12.8           |
 
 ### Sample Outputs
 
@@ -167,7 +154,7 @@ If you use this code in your research, please cite:
 
 For questions or issues, please:
 - Open an issue on GitHub
-- Email: your.email@university.edu
+- Email: brsylmz23@hotmail.com
 
 ---
 
@@ -177,12 +164,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
 
-- Dataset: [AFAD Strong Motion Database]
-- Base architecture: TimesNet ([paper link])
-- Funding: [Grant information if applicable]
-
----
 
 **⭐ If you find this work useful, please star the repository!**
