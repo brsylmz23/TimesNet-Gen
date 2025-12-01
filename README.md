@@ -164,6 +164,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-
-
-**⭐ If you find this work useful, please star the repository!**
+<p align="center">
+  Made with ❤️ for the seismology community
+</p>
