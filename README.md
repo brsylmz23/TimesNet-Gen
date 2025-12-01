@@ -109,12 +109,15 @@ python generate_samples.py --stations 0205 1716 --num_samples 100
 
 ```
 TimesNet-Gen/
-├── generate_samples.py          # Main inference script
-├── models/
-│   ├── TimesNet_PointCloud.py   # Point-cloud generation model
-│   └── TimesNet_StationCond_Gen.py
-├── checkpoints/                  # Pre-trained models
-├── figures/                      # Architecture diagrams
+├── generate_samples.py                  # Main inference script
+├── TimesNet_PointCloud.py               # Point-cloud generation model
+├── plot_combined_hvsr_all_sources.py    # HVSR analysis and plotting
+├── checkpoints/                         # Pre-trained models
+│   ├── timesnet_pointcloud_phase1_final.pth
+│   └── latent_bank_phase1.npz
+├── pcgen_stats/                         # Encoder statistics
+│   └── encoder_feature_std.npy
+├── figures/                             # Architecture diagrams
 ├── requirements.txt
 └── README.md
 ```
