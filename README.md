@@ -4,8 +4,6 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**TimesNet-Gen** is a deep learning framework for generating realistic seismic waveforms using point-cloud aggregation in latent space. The model learns to generate station-specific ground motion time series that preserve key seismological characteristics including frequency content, amplitude distribution, and HVSR (Horizontal-to-Vertical Spectral Ratio) patterns.
-
 ---
 
 ## 📄 Paper
