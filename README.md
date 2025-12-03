@@ -108,6 +108,13 @@ python generate_samples.py --stations 0205 1716 --num_samples 100
 
 *Real (blue) vs Generated (orange) waveforms with Fourier Amplitude Spectra*
 
+<p align="center">
+  <img src="figures/combined_hvsr_f0_station_0205.png" alt="Real vs Generated Comparison 1" width="600"/>
+  <img src="figures/combined_hvsr_f0_station_4628.png" alt="Real vs Generated Comparison 2" width="600"/>
+</p>
+
+*Additional comparison figures showing Real vs Generated waveforms*
+
 ---
 
 ## 🔧 Requirements
