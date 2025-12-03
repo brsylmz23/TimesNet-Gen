@@ -39,17 +39,31 @@ pip install -r requirements.txt
 
 ### 2. Download Pre-trained Model
 
-Download the pre-trained checkpoint and latent bank:
+Download the pre-trained checkpoint and latent bank from Google Drive:
 
+**📥 Google Drive Folder:**
+[Download all files from here](https://drive.google.com/drive/folders/1ZylGGRR5CFOUjqTgFJIuNvLRHOQ5Zx0h?usp=sharing)
+
+**Files to download:**
+- `timesnet_pointcloud_phase1_final.pth` (437.9 MB) → Save to `./checkpoints/`
+- `latent_bank_phase1.npz` (993.5 MB) → Save to `./checkpoints/`
+
+**Quick Download (using `gdown`):**
 ```bash
-# Download from [Google Drive / Zenodo / etc.]
-# Place files in ./checkpoints/
+pip install gdown
+
+# Download entire folder
+gdown --folder https://drive.google.com/drive/folders/1ZylGGRR5CFOUjqTgFJIuNvLRHOQ5Zx0h?usp=sharing -O checkpoints/
+
+# Or download individual files (if you have file IDs)
+# gdown --id FILE_ID -O checkpoints/timesnet_pointcloud_phase1_final.pth
+# gdown --id FILE_ID -O checkpoints/latent_bank_phase1.npz
 ```
 
-Required files:
-- `timesnet_pointcloud_phase1_final.pth` (Model checkpoint)
-- `latent_bank_phase1.npz` (Pre-computed latent vectors)
-- `encoder_feature_std.npy` (For noise injection)
+**Required files:**
+- `./checkpoints/timesnet_pointcloud_phase1_final.pth` (Model checkpoint - 438 MB)
+- `./checkpoints/latent_bank_phase1.npz` (Pre-computed latent vectors - 993 MB)
+- `./pcgen_stats/encoder_feature_std.npy` (Optional: For fine-tuning only)
 
 ### 3. Generate Samples
 
