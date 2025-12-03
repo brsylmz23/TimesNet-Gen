@@ -15,15 +15,6 @@ Conference/Journal: [Venue]
 
 > **Abstract:** [Brief 2-3 sentence summary of your work]
 
----
-
-## 🎯 Key Features
-
-- **Point-Cloud Generation**: Bootstrap aggregation of latent vectors for diverse sample generation
-- **Station-Specific**: Fine-tuned on 5 seismic stations with distinct site characteristics
-- **Fast Inference**: Generate 50 samples in ~10 seconds (no real data required)
-- **Latent Bank**: Pre-computed latent representations for instant generation
-- **HVSR Preservation**: Maintains site-specific frequency characteristics (f₀)
 
 ---
 
