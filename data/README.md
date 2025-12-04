@@ -1,40 +1,33 @@
 # Data Directory
 
-Place your seismic data files here.
+This project **does not require any real data** to run the public demo in `generate_samples.py`.
+All generation is done from the pre-computed latent bank:
+- `checkpoints/timesnet_pointcloud_phase1_final.pth`
+- `checkpoints/latent_bank_phase1.npz`
 
-## Expected Data Format
+This `data/` folder is only needed if you:
+- want to experiment with your **own seismic records**, or
+- plan to extend the code for **fine-tuning** on new stations.
 
-The model expects seismic time series data in MATLAB `.mat` format with the following structure:
-- **3 channels**: East-West (E), North-South (N), Up-Down (U)
-- **Sampling rate**: 200 Hz
-- **Duration**: Variable (will be resampled to 6000 time steps = 30 seconds)
+## Using Your Own Data (Optional)
 
-## Data Organization
+If you add data here, a good convention is:
+- MATLAB `.mat` files
+- 3 channels: East–West (E), North–South (N), Up–Down (U)
+- Variable length (you can resample to 6000 samples if you follow the original pipeline)
+
+Example layout (purely illustrative):
 
 ```
 data/
-├── station_0205/
-│   ├── sample_001.mat
-│   ├── sample_002.mat
+├── station_XXXX/
+│   ├── event_001.mat
+│   ├── event_002.mat
 │   └── ...
-├── station_1716/
-├── station_2020/
-├── station_3130/
-└── station_4628/
+└── station_YYYY/
 ```
 
-## Download Dataset
+Currently, the public demo script **does not read from `data/`** by default.
+You can safely leave this folder empty when using the GitHub demo.
 
-Due to the large size of seismic datasets, the data is hosted separately:
-
-📥 **Download Link:** [Add your data repository link here]
-
-## Alternative: Use Your Own Data
-
-You can use your own seismic data by:
-1. Converting it to `.mat` format
-2. Ensuring 3-channel structure (E, N, U)
-3. Updating the `data_root` path in `generate_samples.py`
-
-For data preprocessing scripts, see the `examples/` directory.
 
