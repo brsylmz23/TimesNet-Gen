@@ -98,10 +98,6 @@ python generate_samples.py --stations 0205 1716 --num_samples 100
 
 ### Sample Outputs
 
-<p align="center">
-  <img src="examples/sample_outputs/example_comparison.png" alt="Real vs Generated" width="600"/>
-</p>
-
 *Real (blue) vs Generated (orange) waveforms with Fourier Amplitude Spectra*
 
 <p align="center">
