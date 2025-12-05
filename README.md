@@ -1,4 +1,4 @@
-# TimesNet-Gen: Seismic Waveform Generation via Point-Cloud Aggregation
+# TimesNet-Gen: Deep Learning-based Site Specific Strong Motion Generation
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
@@ -8,13 +8,9 @@
 
 ## 📄 Paper
 
-**[Paper Title]**  
-Authors: [Your Names]  
-arXiv: [Link will be added upon publication]  
-Conference/Journal: [Venue]
-
-> **Abstract:** [Brief 2-3 sentence summary of your work]
-
+**TimesNet-Gen: Deep Learning-based Site Specific Strong Motion Generation**  
+Authors: Baris Yilmaz, Bevan Deniz Cilgin, Erdem Akagündüz, Salih Tileylioglu 
+arXiv: [[Link will be added upon publication]](https://arxiv.org/abs/2512.04694)  
 
 ---
 
