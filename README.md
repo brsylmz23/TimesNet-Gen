@@ -124,11 +124,14 @@ See `requirements.txt` for complete list.
 If you use this code in your research, please cite:
 
 ```bibtex
-@article{yourname2025timesnetgen,
-  title={TimesNet-Gen: Seismic Waveform Generation via Point-Cloud Aggregation},
-  author={Your Name and Co-authors},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
-  year={2025}
+@misc{yilmaz2025timesnetgendeeplearningbasedsite,
+      title={TimesNet-Gen: Deep Learning-based Site Specific Strong Motion Generation}, 
+      author={Baris Yilmaz and Bevan Deniz Cilgin and Erdem Akagündüz and Salih Tileylioglu},
+      year={2025},
+      eprint={2512.04694},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2512.04694}, 
 }
 ```
 
