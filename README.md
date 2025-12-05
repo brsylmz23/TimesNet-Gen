@@ -10,7 +10,7 @@
 
 **TimesNet-Gen: Deep Learning-based Site Specific Strong Motion Generation**  
 Authors: Baris Yilmaz, Bevan Deniz Cilgin, Erdem Akagündüz, Salih Tileylioglu 
-arXiv: [[Link will be added upon publication]](https://arxiv.org/abs/2512.04694)  
+arXiv: https://arxiv.org/abs/2512.04694  
 
 ---
 
