@@ -101,7 +101,7 @@ python generate_samples.py --stations 0205 1716 --num_samples 100
 
 <p align="center">
   <img src="figures/combined_hvsr_f0_station_0205.png" alt="Real vs Generated Comparison 1" width="600"/>
-  <img src="figures/combined_hvsr_f0_station_4628.png" alt="Real vs Generated Comparison 2" width="600"/>
+  <img src="figures/combined_hvsr_f0_station_2020.png" alt="Real vs Generated Comparison 2" width="600"/>
 </p>
 
 
